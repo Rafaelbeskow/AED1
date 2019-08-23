@@ -27,27 +27,45 @@ struct celula *cria (){
 
 }
 
-void insere (struct celula *ini){
+void insere (struct celula *p){
    struct celula *nova;
     nova=(struct celula*)malloc(sizeof(struct celula));
     printf("digite o nome da pessoa para a agenda\n");
-    scanf("%s",nova->informacoes.nome);
+    scanf(" %[^\n]s",nova->informacoes.nome);
     printf("digite o endereco da pessoa para a agenda\n");
-    scanf("%s",nova->informacoes.endereco);
+    scanf(" %[^\n]s",nova->informacoes.endereco);
     printf("digite o telefone da pessoa para a agenda\n");
     scanf("%ld",&nova->informacoes.telefone);
     printf("escreva a data de nascimento com dia mes e ano\n");
     scanf("%d%d%d",&nova->informacoes.nascimento.dia,&nova->informacoes.nascimento.mes,&nova->informacoes.nascimento.ano);
-    nova=ini->prox;
-    ini->prox = nova;
-};
+    nova->prox=p->prox;
+    p->prox = nova;
+}
 
-void imprimi(struct celula *ini,struct celula *escolha){
+void imprimi(struct celula *ini,struct celula *p){
 	
-	for (escolha=ini->prox;escolha!=NULL;escolha=escolha->prox)
-    printf("Nome:%s\nendereco:%s\ntelefone:%ld\ndata de nascimento:%d/%d/%d\n",ini->informacoes.nome,ini->informacoes.endereco,ini->informacoes.telefone,ini->informacoes.nascimento.dia,ini->informacoes.nascimento.mes,ini->informacoes.nascimento.ano);
+	for (p = ini->prox;p != NULL; p = p->prox)
+    printf("Nome:%s\nendereco:%s\ntelefone:%ld\ndata de nascimento:%d/%d/%d\n",p->informacoes.nome,p->informacoes.endereco,p->informacoes.telefone,p->informacoes.nascimento.dia,p->informacoes.nascimento.mes,p->informacoes.nascimento.ano);
 
-};
+}
+
+void remova(struct celula *ini){
+    char k[100];
+    struct celula *listaum,*listadois;
+    
+    printf("digite o nome da pessoa que queira excluir:\n");
+    scanf(" %[^\n]s",k);
+    listaum=ini;
+    listadois=ini->prox;
+    while(listadois!=NULL && strcmp(listadois->informacoes.nome,k)!=0){
+        listaum=listadois;
+        listadois=listadois->prox;}
+    if (listadois!=NULL){
+        listaum->prox=listadois->prox;
+        free(listadois);
+        printf("\nremovido com sucesso\n");
+    }
+}
 
 int main (void){
 struct celula *ini,*escolha;
@@ -59,8 +77,8 @@ for (int i=0;n!=0;i++){
     scanf ("%d",&n);
     if (n==1)
         insere(ini);
-    /* (n==2)
-      remova(escolha,ini);*/
+    if (n==2)
+      remova(ini);
     if (n==3)
         imprimi(ini,escolha);
 }
